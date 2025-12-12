@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ d.name }} | Portfolio</title>
+  <meta name="description" content="{{ d.summary }}">
+
+  <style>
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.65;
+      color: #0f172a;
+      background: #ffffff;
+    }
+    header{
+      padding: 22px 0 26px;
+      border-bottom: 1px solid #e5e7eb;
+      margin-bottom: 22px;
+    }
+    h1{margin:0;font-size:38px;letter-spacing:-0.5px}
+    h2{margin:10px 0 0;font-size:18px;font-weight:600;color:#334155}
+    h3{margin:0 0 8px;font-size:20px}
+    .meta{margin-top:10px;color:#475569}
+    .meta a{color:#0f172a;text-decoration:none}
+    .meta a:hover{text-decoration:underline}
+
+    .topnav{margin-top:14px}
+    .topnav a{
+      margin-right: 12px;
+      text-decoration: none;
+      color: #0f172a;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+    .topnav a:hover{background:#f1f5f9}
+
+    section{padding: 22px 0;border-bottom:1px solid #f1f5f9}
+    ul{margin:10px 0 0 18px}
+
+    .pill{
+      display:inline-block;
+      padding: 8px 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      margin: 8px 8px 0 0;
+      font-size: 14px;
+      color:#0f172a;
+      background:#ffffff;
+    }
+
+    .card{
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 14px;
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    .muted{color:#64748b}
+    .cta{margin-top:12px;font-weight:700;color:#0f172a}
+
+    .btn{
+      display:inline-block;
+      padding: 10px 14px;
+      border-radius: 12px;
+      text-decoration:none;
+      font-weight:700;
+      border: 1px solid #0f172a;
+      color:#ffffff;
+      background:#0f172a;
+      margin-right: 10px;
+    }
+    .btn:hover{opacity:0.92}
+
+    .btn.secondary{
+      background:#ffffff;
+      color:#0f172a;
+      border: 1px solid #e5e7eb;
+    }
+    .btn.secondary:hover{background:#f8fafc}
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>{{ d.name }}</h1>
+    <h2>{{ d.headline }}</h2>
+
+    <div class="meta">
+      {{ d.location }} •
+      <a href="mailto:{{ d.email }}">{{ d.email }}</a> •
+      <a href="tel:{{ d.phone | replace(' ','') }}">{{ d.phone }}</a> •
+      <a href="{{ d.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+
+    <div class="topnav">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#case-studies">Case Studies</a>
+      <a href="#experience">Experience</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <div style="margin-top:14px">
+      <a class="btn" href="Selvaraj_CV.pdf" download>Download CV</a>
+      <a class="btn secondary" href="{{ d.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+
+    <div class="cta">{{ d.cta }}</div>
+  </header>
+
+  <section id="about">
+    <h3>About</h3>
+    <p>{{ d.summary }}</p>
+  </section>
+
+  <section id="skills">
+    <h3>Core Skills</h3>
+    <div>
+      {% for s in d.skills %}
+        <span class="pill">{{ s }}</span>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="case-studies">
+    <h3>SEO Case Studies</h3>
+
+    {% if d.case_studies %}
+      {% for cs in d.case_studies %}
+        <div class="card">
+          <h4 style="margin:0 0 6px">{{ cs.title }}</h4>
+          <div class="muted">{{ cs.context }}</div>
+
+          <b>Challenge</b>
+          <ul>{% for x in cs.challenge %}<li>{{ x }}</li>{% endfor %}</ul>
+
+          <b>Actions</b>
+          <ul>{% for x in cs.actions %}<li>{{ x }}</li>{% endfor %}</ul>
+
+          <div style="margin-top:10px"><b>Tools:</b> {{ cs.tools | join(", ") }}</div>
+
+          <b>Results</b>
+          <ul>{% for x in cs.results %}<li>{{ x }}</li>{% endfor %}</ul>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="card muted">Add case studies in Content/data.json under \"case_studies\".</div>
+    {% endif %}
+  </section>
+
+  <section id="experience">
+    <h3>Experience</h3>
+
+    {% for job in d.experience %}
+      <div class="card">
+        <b>{{ job.role }}</b> — {{ job.company }}
+        <span class="muted">({{ job.dates }})</span>
+        <ul>{% for h in job.highlights %}<li>{{ h }}</li>{% endfor %}</ul>
+      </div>
+    {% endfor %}
+  </section>
+
+  <section id="education">
+    <h3>Education</h3>
+
+    {% for edu in d.education %}
+      <div class="card">
+        <b>{{ edu.degree }}</b><br>
+        <span class="muted">{{ edu.school }} • {{ edu.dates }}</span>
+      </div>
+    {% endfor %}
+
+    <h3 style="margin-top:18px">Awards</h3>
+    <div class="card">
+      <ul>{% for a in d.awards %}<li>{{ a }}</li>{% endfor %}</ul>
+    </div>
+  </section>
+
+  <section id="contact" style="border-bottom:none">
+    <h3>Contact</h3>
+    <ul>
+      <li>Email: <a href="mailto:{{ d.email }}">{{ d.email }}</a></li>
+      <li>Phone: <a href="tel:{{ d.phone | replace(' ','') }}">{{ d.phone }}</a></li>
+      <li>LinkedIn: <a href="{{ d.linkedin }}" target="_blank" rel="noopener">{{ d.linkedin }}</a></li>
+    </ul>
+  </section>
+</body>
+</html>
